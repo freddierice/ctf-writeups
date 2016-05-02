@@ -1,6 +1,20 @@
-Write up still a work in progress. Calm down. 
+Write up still a work in progress. 
 rsacalc
 ======
+## Prerequisites
+RSA is an encryption scheme that works as follows:
+$ c \equiv m^e (mod N) $,
+$ m \equiv m^d (mod N) $,
+$p * q = N$,
+and
+$e * d \equiv 1 (mod (q-1)(p-1))$ 
+where m is the message (private)
+      c is the ciphertext (public)
+      e is the encryption exponent (public)
+      d is the decryption exponent (private)
+      N is the modulus (public)
+      p and q are the primes that multiply to make N (private)
+
 ## The Poking
 To poke at the problem, we had to connect to the following service:
 ```bash
@@ -76,7 +90,10 @@ echo -n "ALXx/zKUt..." | base64 -d | xxd
 ```
 illegible. Bummer. However, it appears to be approximately 1024 bits long, which given that the name of the challenge is rsacalc, should imply that this is our flag encrypted with 1024 bit RSA.  Furthermore, we found that the key chanages with each session, so using the rsacalc decrypt function will not help us. 
 
-However, since this problem is named rsacalc, and rsa is computed modulo a number, we figured that 197730... could be a modular square root of 4. 
+Remember that weird output with the sqrt 4? We took a look at the length of the output of sqrt 4 from different sessions, and found that the number of bits to hold each of them was approximately 1024. We figured that it must be taking the modular square root instead of the actual square root. In other words, if you square that large number modulo the public modulus in RSA, you get 4. As it turns out, calculating non-trivial square roots modulo large numbers is not trivial, and gives us enough information about p and q. 
 
-Remember that weird output with the sqrt 4? We took a look at the length of the output of sqrt 4 from different sessions, and found that the number of bits to hold each of them was approximately 1024. We figured that it must be taking the modular square root instead of the actual square root. In other words, if you square that large number modulo the public modulus in RSA, you get 4. As it turns out, calculating non-trivial square roots modulo large numbers is not trivial, and gives us enough information about p and q than 
+We can look at the following: 
+$b^2 \equiv 4 \implies b^2 - 4 \equiv 0 \implies (b + 2)(b-2) \equiv 0 (mod N)$,
+If we are lucky, either $b+2$ or $b-2$ will share a common factor with $N$ that is not $1$ or $N$ (namely either $p$ or $q$). 
 
+However, this attack implies that you know the public modulus N. To find it, ... [todo: joshlf] 
