@@ -1,3 +1,4 @@
+Write up still a work in progress. Calm down. 
 rsacalc
 ======
 ## The Poking
@@ -47,7 +48,7 @@ sqrt 4
 7222331634634674677271062701817943571012861631019745907071016619580477074612782592098300022381287695
 26950635281839696
 ```
-What. That does not look like the square root of 4.  Keep this in mind for later on.  
+What. That does not look like the square root of 4.  Keep this in mind for later on. For now, let's take a look at the rest of the session:
 ```
 Free trial finished.
 Hey, don't forget your flag!
@@ -73,6 +74,9 @@ echo -n "ALXx/zKUt..." | base64 -d | xxd
 00000e0: 6d9a 012f b6df ad0a 134f c4bf 58d1 1945  m../.....O..X..E
 00000f0: 582a 086c 4f9c 267d 1077 f59a f8fc 5df9  X*.lO.&}.w....].
 ```
-encrypted. Bummer. 
+illegible. Bummer. However, it appears to be approximately 1024 bits long, which given that the name of the challenge is rsacalc, should imply that this is our flag encrypted with 1024 bit RSA.  Furthermore, we found that the key chanages with each session, so using the rsacalc decrypt function will not help us. 
 
-However, since this problem is named rsacalc, and rsa is computed modulo a number, we figured that 197730... could be a modular square root of 4.  If th
+However, since this problem is named rsacalc, and rsa is computed modulo a number, we figured that 197730... could be a modular square root of 4. 
+
+Remember that weird output with the sqrt 4? We took a look at the length of the output of sqrt 4 from different sessions, and found that the number of bits to hold each of them was approximately 1024. We figured that it must be taking the modular square root instead of the actual square root. In other words, if you square that large number modulo the public modulus in RSA, you get 4. As it turns out, calculating non-trivial square roots modulo large numbers is not trivial, and gives us enough information about p and q than 
+
